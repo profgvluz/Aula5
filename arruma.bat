@@ -1,0 +1,1 @@
+function git { & "C:\git\bin\git.exe" @args }
