@@ -3,7 +3,7 @@ import pytest
 
 # Teste 1: CEP válido para Alumínio (Conforme PDF: 18125-000)
 def test_cep_valido_aluminio():
-    assert validar_cep_cidade("18125-000", "Aluminio", "ceps.xlsx") == False
+    assert validar_cep_cidade("18125-000", "Aluminio", "ceps.xlsx") == True
 
 # Teste 2: CEP válido para Itu (Conforme PDF: 13300-000)
 def test_cep_valido_itu():
