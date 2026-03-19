@@ -52,8 +52,8 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ email }}
-          password: ${{ gmail }}
+          username: ${{ secrets.email }}
+          password: ${{ secrets.gmail }}
           subject: "Termo de Aceite Tecnico - Versão v1.1"
           to: "gustavo.luz@prof.uniso.br" # Pode ser o seu e-mail para teste
           from: "Automacao GitHub Actions"
