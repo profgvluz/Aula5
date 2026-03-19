@@ -11,27 +11,51 @@ jobs:
       matrix:
 #        os: [ubuntu-latest, macos-latest, windows-latest, windows-2019, windows-2022]
         os: [ubuntu-latest]
-        python-version: ["3.9","3.10"]
+#        python-version: ["3.9","3.10"]
       
     steps:
       - uses: actions/checkout@v4
       - name: set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-#          python-version: "3.9" 
+#          python-version: ${{ matrix.python-version }}
+          python-version: "3.9" 
       - name: install pytest
         run:  |
           python -m pip install --upgrade pip
           pip install -U pytest
           pip install pandas
           pip install openpyxl
-#          pip install pytest-cov
+          pip install pytest-cov
+          pip install jinja2
 
       -  name: Run pytest
          run: |
-           python -m pytest -v
+           python -m pytest --junitxml=resultado_testes.xml
+#           python -m pytest -v
 #           pytest --cov --cov-report term-missing
-#            python -m pytest --cov
-#            pytest --cov --cov-report term-missing --cov-report html
+#           python -m pytest --cov
+#           pytest --cov --cov-report term-missing --cov-report html
+
+      - name: Gerar Relatorio de Aceite HTML
+        run: |
+          python gera_relatorio.py
+          
+      - name: Upload Artefato de Aceite
+        uses: actions/upload-artifact@v4
+        with:
+          name: Termo-de-Aceite-Final
+          path: termo_de_aceite.html
            
+      - name: Enviar E-mail de Aceite
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ email }}
+          password: ${{ gmail }}
+          subject: "Termo de Aceite Tecnico - Versão v1.1"
+          to: "gustavo.luz@prof.uniso.br" # Pode ser o seu e-mail para teste
+          from: "Automacao GitHub Actions"
+          body: "Prezado, segue em anexo o relatório de testes para validação e aceite da release."
+          attachments: termo_de_aceite.html # O nome do arquivo gerado pelo seu script
