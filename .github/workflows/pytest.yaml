@@ -26,12 +26,35 @@ jobs:
           pip install -U pytest
           pip install pandas
           pip install openpyxl
+          pip install jinja2
 #          pip install pytest-cov
 
       -  name: Run pytest
          run: |
-           python -m pytest -v
+           python -m pytest --junitxml=resultado_testes.xml
 #           pytest --cov --cov-report term-missing
 #            python -m pytest --cov
 #            pytest --cov --cov-report term-missing --cov-report html
+
+      - name: Gerar Relatorio de Aceite HTML
+        run: |
+          python gera_relatorio.py
+          
+      - name: Upload Artefato de Aceite
+        uses: actions/upload-artifact@v4
+        with:
+          name: Termo-de-Aceite-Final
+          path: termo_de_aceite.html
            
+      - name: Enviar E-mail de Aceite
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.email }}
+          password: ${{ secrets.gmail }}
+          subject: "Teste do Gustavo Venancio luz"
+          to: "gustavo.luz@prof.uniso.br" # Pode ser o seu e-mail para teste
+          from: "Automacao GitHub Actions"
+          body: "Prezado, segue em anexo o relatório de testes para validação e aceite da release."
+          attachments: termo_de_aceite.html # O nome do arquivo gerado pelo seu script
